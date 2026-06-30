@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# editor
+.vscode/
+.idea/
+
+# logs
+*.log
