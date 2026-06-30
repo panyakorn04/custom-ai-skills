@@ -1,4 +1,4 @@
-FROM glm-5.2:cloud
+FROM qwen2.5:3b
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.95

@@ -7,7 +7,7 @@ Repo-managed custom skills, Open WebUI/Ollama model assets, and VPS deployment w
 ```text
 ai/
 ├── modelfiles/
-│   └── panyakorn-glm-5.2.Modelfile
+│   └── panyakorn-local-qwen.Modelfile
 └── skills/
     ├── portfolio-2026/
     │   └── SKILL.md
@@ -21,7 +21,7 @@ ai/
 
 ## Intended deployment
 
-GitHub Actions syncs `ai/` to the VPS at `/opt/apps/ai`, then rebuilds the Ollama custom model from the Modelfile.
+GitHub Actions syncs `ai/` to the VPS at `/opt/apps/ai`, then rebuilds the local Ollama custom model `panyakorn-local:latest` from the Modelfile.
 
 Expected VPS compose mounts:
 

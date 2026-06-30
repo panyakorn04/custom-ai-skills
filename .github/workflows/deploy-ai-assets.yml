@@ -92,14 +92,18 @@ jobs:
             docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml config >/dev/null
             docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml up -d ollama
 
-            docker exec ollama test -f /opt/ai/modelfiles/panyakorn-glm-5.2.Modelfile
+            docker exec ollama test -f /opt/ai/modelfiles/panyakorn-local-qwen.Modelfile
             docker exec ollama ollama --version
 
-            if docker exec ollama ollama create panyakorn-glm:latest -f /opt/ai/modelfiles/panyakorn-glm-5.2.Modelfile; then
-              echo "Created/updated panyakorn-glm:latest"
+            if docker exec ollama ollama create panyakorn-local:latest -f /opt/ai/modelfiles/panyakorn-local-qwen.Modelfile; then
+              echo "Created/updated panyakorn-local:latest"
             else
-              echo "WARNING: Ollama service is running, but creating panyakorn-glm:latest failed."
-              echo "If the Modelfile uses glm-5.2:cloud, run 'docker exec -it ollama ollama signin' on the VPS, then rerun this workflow."
+              echo "ERROR: Ollama service is running, but creating panyakorn-local:latest failed."
+              exit 1
+            fi
+
+            if docker exec ollama ollama show panyakorn-glm:latest >/dev/null 2>&1; then
+              docker exec ollama ollama rm panyakorn-glm:latest || true
             fi
 
             docker exec ollama ollama list

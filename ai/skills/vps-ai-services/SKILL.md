@@ -24,7 +24,7 @@ Use this skill when:
 - Adding or changing the `ollama` service.
 - Adding or changing the `open-webui` service.
 - Deploying Modelfiles from this repo to the VPS.
-- Rebuilding custom Ollama models such as `panyakorn-glm:latest`.
+- Rebuilding custom Ollama models such as `panyakorn-local:latest`.
 - Connecting backend or n8n workflows to Ollama.
 
 ## Compose Pattern
@@ -57,7 +57,7 @@ open-webui:
     WEBUI_URL: https://ai.panyakorn.com
     WEBUI_SECRET_KEY: ${OPEN_WEBUI_SECRET_KEY}
     ENABLE_SIGNUP: "false"
-    DEFAULT_MODELS: panyakorn-glm:latest
+    DEFAULT_MODELS: panyakorn-local:latest
   volumes:
     - open-webui-data:/app/backend/data
   expose:
@@ -89,8 +89,8 @@ After AI assets are synced to `/opt/apps/ai`, rebuild the custom model:
 ```bash
 cd /opt/apps
 docker compose up -d ollama open-webui
-docker exec ollama ollama create panyakorn-glm:latest \
-  -f /opt/ai/modelfiles/panyakorn-glm-5.2.Modelfile
+docker exec ollama ollama create panyakorn-local:latest \
+  -f /opt/ai/modelfiles/panyakorn-local-qwen.Modelfile
 docker exec ollama ollama list
 ```
 
@@ -100,7 +100,7 @@ Test Ollama internally:
 docker exec ollama curl -s http://127.0.0.1:11434/api/chat \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "panyakorn-glm:latest",
+    "model": "panyakorn-local:latest",
     "messages": [
       {"role": "user", "content": "ตอบเป็นภาษาไทยสั้น ๆ ว่าพร้อมใช้งานไหม"}
     ],
@@ -124,14 +124,14 @@ docker exec ollama curl -s http://127.0.0.1:11434/api/chat \
 1. `OLLAMA_BASE_URL=http://localhost:11434` inside Open WebUI is wrong in Docker Compose; use `http://ollama:11434`.
 2. Open WebUI `ConfigVar` settings may persist in its database and override later environment changes.
 3. Floating image tags are convenient but less reproducible; pin versions when the stack becomes production-critical.
-4. `glm-5.2:cloud` may require Ollama Cloud authentication inside the `ollama-data` volume.
+4. Local models such as `qwen2.5:3b` avoid Ollama Cloud subscription requirements but have lower reasoning quality than cloud models.
 5. Recreating the Ollama container is safe if `ollama-data` is preserved; deleting the volume removes models/auth/cache.
 
 ## Verification Checklist
 
 - [ ] `docker compose config` passes.
 - [ ] `docker compose ps ollama open-webui caddy` shows running services.
-- [ ] `docker exec ollama ollama list` shows `panyakorn-glm:latest`.
+- [ ] `docker exec ollama ollama list` shows `panyakorn-local:latest`.
 - [ ] Internal Ollama API test returns a model response.
 - [ ] `curl -I https://ai.panyakorn.com` responds.
 - [ ] Ollama is not reachable publicly.
