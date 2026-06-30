@@ -1,12 +1,14 @@
 name: Deploy AI Assets to VPS
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "ai/**"
-      - ".github/workflows/deploy-ai-assets.yml"
+  # Enable the push trigger after VPS secrets are configured and the VPS has
+  # ollama/open-webui services in /opt/apps/docker-compose.yml.
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "ai/**"
+  #     - ".github/workflows/deploy-ai-assets.yml"
   workflow_dispatch:
 
 concurrency:
