@@ -107,4 +107,8 @@ jobs:
             fi
 
             docker exec ollama ollama list
+            docker run --rm --network apps_default curlimages/curl:8.10.1 \
+              -fsS --max-time 120 http://ollama:11434/api/chat \
+              -H "Content-Type: application/json" \
+              -d '{"model":"panyakorn-local:latest","messages":[{"role":"user","content":"ตอบเป็นภาษาไทยสั้น ๆ ว่า Ollama local พร้อมใช้งานไหม"}],"stream":false}'
             docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml ps ollama
