@@ -90,7 +90,7 @@ jobs:
             YAML
 
             docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml config >/dev/null
-            docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml up -d ollama
+            docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml up -d --force-recreate ollama
 
             docker exec ollama test -f /opt/ai/modelfiles/panyakorn-local-qwen.Modelfile
             docker exec ollama ollama --version
