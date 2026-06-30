@@ -36,6 +36,12 @@ jobs:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
           set -euo pipefail
+
+          if [ -z "${VPS_HOST:-}" ] || [ -z "${VPS_USER:-}" ] || [ -z "${VPS_SSH_KEY:-}" ]; then
+            echo "Missing VPS_HOST, VPS_USER, or VPS_SSH_KEY secret for this repository."
+            exit 1
+          fi
+
           install -m 700 -d ~/.ssh
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
@@ -51,21 +57,50 @@ jobs:
             "$VPS_USER@$VPS_HOST" \
             'set -euo pipefail; mkdir -p /opt/apps; rm -rf /opt/apps/ai; tar -xf - -C /opt/apps'
 
-      - name: Rebuild Ollama custom model
+      - name: Ensure Ollama service and rebuild custom model
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 20m
           script: |
             set -euo pipefail
             cd /opt/apps
 
-            docker compose up -d ollama open-webui
+            ts="$(date +%Y%m%d-%H%M%S)"
+            if [ -f docker-compose.ai.yml ]; then
+              cp docker-compose.ai.yml "docker-compose.ai.yml.bak.${ts}"
+            fi
+
+            cat > docker-compose.ai.yml <<'YAML'
+            services:
+              ollama:
+                image: ollama/ollama:latest
+                container_name: ollama
+                restart: unless-stopped
+                volumes:
+                  - ollama_data:/root/.ollama
+                  - ./ai:/opt/ai:ro
+                expose:
+                  - "11434"
+
+            volumes:
+              ollama_data:
+            YAML
+
+            docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml config >/dev/null
+            docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml up -d ollama
 
             docker exec ollama test -f /opt/ai/modelfiles/panyakorn-glm-5.2.Modelfile
-            docker exec ollama ollama create panyakorn-glm:latest \
-              -f /opt/ai/modelfiles/panyakorn-glm-5.2.Modelfile
+            docker exec ollama ollama --version
+
+            if docker exec ollama ollama create panyakorn-glm:latest -f /opt/ai/modelfiles/panyakorn-glm-5.2.Modelfile; then
+              echo "Created/updated panyakorn-glm:latest"
+            else
+              echo "WARNING: Ollama service is running, but creating panyakorn-glm:latest failed."
+              echo "If the Modelfile uses glm-5.2:cloud, run 'docker exec -it ollama ollama signin' on the VPS, then rerun this workflow."
+            fi
 
             docker exec ollama ollama list
-            docker exec ollama curl -s http://127.0.0.1:11434/api/tags
+            docker compose -f docker-compose.yml -f docker-compose.open-webui-theme.yml -f docker-compose.ai.yml ps ollama
