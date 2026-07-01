@@ -84,7 +84,7 @@ def validate_skill(path: pathlib.Path) -> list[str]:
 
 
 def main() -> int:
-    skill_files = sorted(SKILLS_DIR.glob("*/SKILL.md"))
+    skill_files = sorted(SKILLS_DIR.glob("*/*/SKILL.md"))
     if not skill_files:
         print(f"No SKILL.md files found under {SKILLS_DIR}", file=sys.stderr)
         return 1
