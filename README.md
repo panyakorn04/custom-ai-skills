@@ -31,7 +31,7 @@ ai/
 
 The backend loads different skill profile folders depending on the public surface:
 
-- `ai-console`: used by `ai.panyakorn.com` through `/api/ai/chat` and `/api/ai/chat/stream`. This profile can include internal engineering, VPS, automation, and repo-operation skills.
+- `ai-console`: used by `ai.panyakorn.com` through `/api/ai/chat` and `/api/ai/chat/stream`. The backend currently pins this surface to `anti-hallucination-guardrails` only; other `ai-console` skills are retained as source material but are not auto-selected by the API.
 - `portfolio-site`: used by `panyakorn.com` through `/api/portfolio/assistant/chat` and `/api/portfolio/assistant/chat/stream`. This profile must remain public-safe and focused on portfolio visitor questions.
 
 Keep private deployment details, credentials, admin endpoints, and automation internals out of `portfolio-site` skills.
