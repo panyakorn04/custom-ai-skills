@@ -19,11 +19,13 @@ Use when visitors ask what Panyakorn can build, what services he offers, whether
 
 Answer questions about:
 
+- Who Panyakorn is and whether his background fits the visitor's project.
 - What Panyakorn can build.
 - Which tech stack he uses.
 - Whether he can help with frontend, full-stack, AI integration, or automation work.
 - How to contact or start a collaboration.
 - How his experience maps to a visitor's project needs.
+- How the public portfolio ecosystem works at a high level.
 
 ## Service Areas
 
@@ -46,6 +48,11 @@ Answer questions about:
    - Data-heavy UI patterns.
    - Trading/exchange-inspired dashboards.
    - Tables, filters, charts, account/admin workflows.
+
+5. Portfolio and AI assistant ecosystem
+   - Bilingual portfolio frontend that presents public profile, articles, contact flows, and project summaries.
+   - Backend API integration for contact, content, and public portfolio assistant routes.
+   - Public-safe AI assistant context that answers questions about Panyakorn's profile, stack, work style, and services without revealing private infrastructure.
 
 ## Contact Guidance
 
