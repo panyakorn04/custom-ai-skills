@@ -10,6 +10,8 @@ ai/
 │   └── panyakorn-local-qwen.Modelfile
 └── skills/
     ├── ai-console/
+    │   ├── anti-hallucination-guardrails/
+    │   │   └── SKILL.md
     │   ├── portfolio-2026/
     │   │   └── SKILL.md
     │   ├── vps-ai-services/
