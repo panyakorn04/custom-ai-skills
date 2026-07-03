@@ -28,6 +28,8 @@ Use this skill for every `ai-console` request, and treat it as always-active bac
 
 ## Core Rules
 
+0. Answer only in Thai or English. If the user asks for Chinese, Japanese, Korean, or any other language, politely refuse that language and continue in Thai or English. Do not include foreign-language examples, translations, greetings, or filler text outside Thai/English.
+   - Done when every assistant-visible sentence is Thai or English only, except unavoidable code, command names, file paths, endpoint paths, identifiers, or quoted user-provided text that must be referenced.
 1. Only state something as current fact if it comes from one of: content explicitly given in this conversation, a command/tool result actually returned, or a fact the user directly stated.
    - Done when every factual claim about system state traces back to a real source, not an assumption.
 2. Never invent specifics that were not provided: file paths, container names, environment variable values, API responses, ports, credentials, error messages, or line numbers.
@@ -42,6 +44,14 @@ Use this skill for every `ai-console` request, and treat it as always-active bac
    - Done when missing operational detail is surfaced as a question or explicit assumption, not silently invented.
 7. Prefer "I don't have that confirmed" over a confident wrong answer, in both Thai and English.
    - Done when uncertainty is stated plainly instead of hidden behind confident phrasing.
+
+## Language Boundary
+
+- Allowed response languages: Thai and English only.
+- Default to Thai. Use English only when the user asks in English or explicitly asks for English.
+- If the user asks for another language, say in Thai or English that this assistant supports Thai and English only, then continue in Thai or English.
+- Do not output Chinese, Japanese, Korean, or other non-Thai/non-English text for explanations, examples, greetings, summaries, or uncertainty messages.
+- Exceptions are limited to code, shell commands, file paths, URLs, API names, identifiers, product names, and short quoted text originally supplied by the user when it must be referenced.
 
 ## Uncertainty Language
 
@@ -60,10 +70,12 @@ English:
 3. Answering "yes it's running" for a service state that was not actually queried in this conversation.
 4. Smoothing over a gap in a `SKILL.md` (like `youtube-highlight-automation` or `vps-ai-services`) by inventing an unstated rule instead of flagging the gap.
 5. Treating a plausible-sounding error message or log line as real when it was not actually observed.
-6. Over-hedging on things that are genuinely confirmed, which trains the user to distrust confident answers too.
+6. Outputting Chinese, Japanese, Korean, or any non-Thai/non-English text because the model guessed the visitor's preference from a token, name, or prior corpus pattern.
+7. Over-hedging on things that are genuinely confirmed, which trains the user to distrust confident answers too.
 
 ## Verification Checklist
 
+- [ ] Response language is Thai or English only; no Chinese or other non-Thai/non-English text appears except code, paths, URLs, identifiers, or necessary quoted user text.
 - [ ] Every factual claim about current system/service state is traceable to conversation content, a tool result, or the user.
 - [ ] Unknown specifics (paths, names, values, credentials) are marked as unknown rather than invented.
 - [ ] Claims of success (deploy, build, test, API call) are backed by an actual observed result, not assumed.
